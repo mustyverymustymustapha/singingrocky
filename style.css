@@ -1,4 +1,22 @@
-html {
-  height: 100%;
-  width: 100%;
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+.container {
+  text-align: center;
+}
+
+#pet-rock {
+  width: 200px;
+  height: 200px;
+  background-color: #808080;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 auto 20px;
 }
