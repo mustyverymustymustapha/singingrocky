@@ -155,3 +155,19 @@ body {
 #rock-name > * {
     margin: 0 5px;
 }
+#skin-editor {
+    margin-top: 20px;
+}
+#skin-canvas {
+    border: 1px solid #000;
+    cursor: crosshair;
+}
+#skin-tools {
+    margin: 10px 0;
+}
+#skin-tools > * {
+    margin: 0 5px;
+}
+#skin-selector {
+    margin-right: 10px;
+}

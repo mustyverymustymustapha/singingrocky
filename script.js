@@ -17,6 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteRockButton = document.getElementById('delete-rock');
     const rockNameInput = document.getElementById('rock-name-input');
     const saveNameButton = document.getElementById('save-name');
+    const skinCanvas = document.getElementById('skin-canvas');
+    const skinColor = document.getElementById('skin-color');
+    const brushSize = document.getElementById('brush-size');
+    const clearSkinButton = document.getElementById('clear-skin');
+    const saveSkinButton = document.getElementById('save-skin');
+    const skinSelector = document.getElementById('skin-selector');
+    const applySkinButton = document.getElementById('apply-skin');
     let mediaRecorder;
     let audioChunks = [];
     let audioBlob;
@@ -25,14 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let analyser;
     let rocks = [];
     let currentRock = null;
-    function Rock(name, color, hasSunglasses, hasHat) {
+    let skins = [];
+    let isDrawing = false;
+    function Rock(name, color, hasSunglasses, hasHat, skin) {
         this.name = name;
         this.color = color;
         this.hasSunglasses = hasSunglasses;
         this.hasHat = hasHat;
+        this.skin = skin;
     }
     function createNewRock() {
-        const newRock = new Rock(`Rock ${rocks.length + 1}`, '#808080', false, false);
+        const newRock = new Rock(`Rock ${rocks.length + 1}`, '#808080', false, false, null);
         rocks.push(newRock);
         updateRockSelector();
         setCurrentRock(rocks.length - 1);
@@ -57,6 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
         rockColor.value = currentRock.color;
         sunglasses.style.display = currentRock.hasSunglasses ? 'block' : 'none';
         hat.style.display = currentRock.hasHat ? 'block' : 'none';
+        if (currentRock.skin) {
+            applyCustomSkin(currentRock.skin);
+        } else {
+            clearCustomSkin();
+        }
     }
     rockSelector.addEventListener('change', (e) => {
         setCurrentRock(e.target.value);
@@ -189,6 +204,69 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         draw();
+    }
+    const ctx = skinCanvas.getContext('2d');
+    skinCanvas.addEventListener('mousedown', startDrawing);
+    skinCanvas.addEventListener('mousemove', draw);
+    skinCanvas.addEventListener('mouseup', stopDrawing);
+    skinCanvas.addEventListener('mouseout', stopDrawing);
+    function startDrawing(e) {
+        isDrawing = true;
+        draw(e);
+    }
+    function draw(e) {
+        if (!isDrawing) return;
+        ctx.lineWidth = brushSize.value;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = skinColor.value;
+        ctx.lineTo(e.clientX - skinCanvas.offsetLeft, e.clientY - skinCanvas.offsetTop);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX - skinCanvas.offsetLeft, e.clientY - skinCanvas.offsetTop);
+    }
+    function stopDrawing() {
+        isDrawing = false;
+        ctx.beginPath();
+    }
+    clearSkinButton.addEventListener('click', () => {
+        ctx.clearRect(0, 0, skinCanvas.width, skinCanvas.height);
+    });
+    saveSkinButton.addEventListener('click', () => {
+        const skinName = prompt('Enter a name for this skin:');
+        if (skinName) {
+            const skinData = skinCanvas.toDataURL();
+            skins.push({ name: skinName, data: skinData });
+            updateSkinSelector();
+        }
+    });
+    function updateSkinSelector() {
+        skinSelector.innerHTML = '<option value="">Select a skin</option>';
+        skins.forEach((skin, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = skin.name;
+            skinSelector.appendChild(option);
+        });
+    }
+    applySkinButton.addEventListener('click', () => {
+        const selectedSkinIndex = skinSelector.value;
+        if (selectedSkinIndex !== '') {
+            const selectedSkin = skins[selectedSkinIndex];
+            currentRock.skin = selectedSkin.data;
+            applyCustomSkin(selectedSkin.data);
+        }
+    });
+    function applyCustomSkin(skinData) {
+        const img = new Image();
+        img.onload = () => {
+            ctx.clearRect(0, 0, skinCanvas.width, skinCanvas.height);
+            ctx.drawImage(img, 0, 0);
+            petRock.style.backgroundImage = `url(${skinData})`;
+        };
+        img.src = skinData;
+    }
+    function clearCustomSkin() {
+        petRock.style.backgroundImage = 'none';
     }
     createNewRock();
 });
