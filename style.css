@@ -6,12 +6,11 @@ body {
   height: 100vh;
   margin: 0;
   background-color: #f0f0f0;
+  transition: background-color 0.5s ease;
 }
-
 .container {
   text-align: center;
 }
-
 #pet-rock {
   width: 200px;
   height: 200px;
@@ -20,14 +19,12 @@ body {
   position: relative;
   margin: 0 auto 20px;
 }
-
 .face {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 .eye {
   width: 30px;
   height: 30px;
@@ -35,16 +32,17 @@ body {
   border-radius: 50%;
   position: absolute;
   top: 0;
+  transition: height 0.1s ease;
 }
-
 .eye.left {
   left: -40px;
 }
-
 .eye.right {
   right: -40px;
 }
-
+.eye.blink {
+  height: 2px;
+}
 .mouth {
   width: 60px;
   height: 30px;
@@ -56,21 +54,17 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
-
 #karaoke-area {
   margin-top: 20px;
 }
-
 #lyrics-input {
   width: 300px;
   padding: 5px;
   margin-right: 10px;
 }
-
 #sing-button {
   padding: 5px 10px;
 }
-
 #lyrics-display {
   margin-top: 20px;
   font-size: 24px;
