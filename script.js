@@ -12,12 +12,67 @@ document.addEventListener('DOMContentLoaded', () => {
     const recordButton = document.getElementById('record-button');
     const playButton = document.getElementById('play-button');
     const visualizer = document.getElementById('visualizer');
+    const rockSelector = document.getElementById('rock-selector');
+    const newRockButton = document.getElementById('new-rock');
+    const deleteRockButton = document.getElementById('delete-rock');
+    const rockNameInput = document.getElementById('rock-name-input');
+    const saveNameButton = document.getElementById('save-name');
     let mediaRecorder;
     let audioChunks = [];
     let audioBlob;
     let audioUrl;
     let audioContext;
     let analyser;
+    let rocks = [];
+    let currentRock = null;
+    function Rock(name, color, hasSunglasses, hasHat) {
+        this.name = name;
+        this.color = color;
+        this.hasSunglasses = hasSunglasses;
+        this.hasHat = hasHat;
+    }
+    function createNewRock() {
+        const newRock = new Rock(`Rock ${rocks.length + 1}`, '#808080', false, false);
+        rocks.push(newRock);
+        updateRockSelector();
+        setCurrentRock(rocks.length - 1);
+    }
+    function updateRockSelector() {
+        rockSelector.innerHTML = '';
+        rocks.forEach((rock, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = rock.name;
+            rockSelector.appendChild(option);
+        });
+    }
+    function setCurrentRock(index) {
+        currentRock = rocks[index];
+        rockSelector.value = index;
+        updateRockDisplay();
+    }
+    function updateRockDisplay() {
+        rockNameInput.value = currentRock.name;
+        petRock.style.backgroundColor = currentRock.color;
+        rockColor.value = currentRock.color;
+        sunglasses.style.display = currentRock.hasSunglasses ? 'block' : 'none';
+        hat.style.display = currentRock.hasHat ? 'block' : 'none';
+    }
+    rockSelector.addEventListener('change', (e) => {
+        setCurrentRock(e.target.value);
+    });
+    newRockButton.addEventListener('click', createNewRock);
+    deleteRockButton.addEventListener('click', () => {
+        if (rocks.length > 1) {
+            rocks.splice(rockSelector.value, 1);
+            updateRockSelector();
+            setCurrentRock(0);
+        }
+    });
+    saveNameButton.addEventListener('click', () => {
+        currentRock.name = rockNameInput.value;
+        updateRockSelector();
+    });
     singButton.addEventListener('click', () => {
         const lyrics = lyricsInput.value;
         if (lyrics) {
@@ -64,13 +119,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
     }
     rockColor.addEventListener('input', (e) => {
+        currentRock.color = e.target.value;
         petRock.style.backgroundColor = e.target.value;
     });
     toggleSunglasses.addEventListener('click', () => {
-        sunglasses.style.display = sunglasses.style.display === 'none' ? 'block' : 'none';
+        currentRock.hasSunglasses = !currentRock.hasSunglasses;
+        sunglasses.style.display = currentRock.hasSunglasses ? 'block' : 'none';
     });
     toggleHat.addEventListener('click', () => {
-        hat.style.display = hat.style.display === 'none' ? 'block' : 'none';
+        currentRock.hasHat = !currentRock.hasHat;
+        hat.style.display = currentRock.hasHat ? 'block' : 'none';
     });
     recordButton.addEventListener('click', toggleRecording);
     playButton.addEventListener('click', playRecording);
@@ -132,4 +190,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         draw();
     }
+    createNewRock();
 });
