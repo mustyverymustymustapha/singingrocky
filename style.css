@@ -130,3 +130,16 @@ body {
   background-color: brown;
   border-radius: 50%;
 }
+#recording-area {
+  margin-top: 20px;
+}
+#recording-area button {
+  margin: 0 5px;
+  padding: 5px 10px;
+}
+#visualizer {
+  width: 300px;
+  height: 100px;
+  background-color: #000;
+  margin-top: 10px;
+}
