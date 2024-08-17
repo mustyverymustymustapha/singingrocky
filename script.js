@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const singButton = document.getElementById('sing-button');
     const lyricsDisplay = document.getElementById('lyrics-display');
     const eyes = document.querySelectorAll('.eye');
+    const rockColor = document.getElementById('rock-color');
+    const toggleSunglasses = document.getElementById('toggle-sunglasses');
+    const toggleHat = document.getElementById('toggle-hat');
+    const sunglasses = document.getElementById('sunglasses');
+    const hat = document.getElementById('hat');
     singButton.addEventListener('click', () => {
         const lyrics = lyricsInput.value;
         if (lyrics) {
@@ -13,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function sing(lyrics) {
         lyricsDisplay.textContent = '';
         petRock.classList.add('singing');
+        petRock.classList.add('bouncing');
         let i = 0;
         const singInterval = setInterval(() => {
             if (i < lyrics.length) {
@@ -22,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 clearInterval(singInterval);
                 petRock.classList.remove('singing');
+                petRock.classList.remove('bouncing');
             }
         }, 100);
         startBlinking();
@@ -47,4 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
             eyes.forEach(eye => eye.classList.remove('blink'));
         }, 100);
     }
+    rockColor.addEventListener('input', (e) => {
+        petRock.style.backgroundColor = e.target.value;
+    });
+    toggleSunglasses.addEventListener('click', () => {
+        sunglasses.style.display = sunglasses.style.display === 'none' ? 'block' : 'none';
+    });
+    toggleHat.addEventListener('click', () => {
+        hat.style.display = hat.style.display === 'none' ? 'block' : 'none';
+    });
 });

@@ -18,6 +18,7 @@ body {
   border-radius: 50%;
   position: relative;
   margin: 0 auto 20px;
+  transition: transform 0.1s ease, background-color 0.3s ease;
 }
 .face {
   position: absolute;
@@ -69,4 +70,63 @@ body {
   margin-top: 20px;
   font-size: 24px;
   font-weight: bold;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+.bouncing {
+  animation: bounce 0.5s infinite;
+}
+#customization-area {
+  margin-top: 20px;
+}
+#customization-area > * {
+  margin: 0 5px;
+}
+#sunglasses {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 40px;
+  background-color: black;
+  border-radius: 10px;
+  display: none;
+}
+#sunglasses::before, #sunglasses::after {
+  content: '';
+  position: absolute;
+  width: 50px;
+  height: 40px;
+  background-color: black;
+  border-radius: 10px;
+}
+#sunglasses::before {
+  left: -10px;
+}
+#sunglasses::after {
+  right: -10px;
+}
+#hat {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 60px;
+  background-color: brown;
+  border-radius: 50% 50% 0 0;
+  display: none;
+}
+#hat::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: -20px;
+  width: 180px;
+  height: 20px;
+  background-color: brown;
+  border-radius: 50%;
 }
