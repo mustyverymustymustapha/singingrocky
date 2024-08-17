@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karaoke Pet Rocks</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -52,6 +53,12 @@
             </div>
             <select id="skin-selector"></select>
             <button id="apply-skin">Apply Skin</button>
+        </div>
+        <div id="share-rock">
+            <button id="generate-qr">Generate QR Code</button>
+            <div id="qrcode"></div>
+            <input type="file" id="qr-input" accept="image/*">
+            <button id="scan-qr">Scan QR Code</button>
         </div>
     </div>
     <script src="script.js"></script>

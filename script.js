@@ -24,6 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveSkinButton = document.getElementById('save-skin');
     const skinSelector = document.getElementById('skin-selector');
     const applySkinButton = document.getElementById('apply-skin');
+    const generateQRButton = document.getElementById('generate-qr');
+    const qrcodeDiv = document.getElementById('qrcode');
+    const qrInput = document.getElementById('qr-input');
+    const scanQRButton = document.getElementById('scan-qr');
     let mediaRecorder;
     let audioChunks = [];
     let audioBlob;
@@ -268,5 +272,50 @@ document.addEventListener('DOMContentLoaded', () => {
     function clearCustomSkin() {
         petRock.style.backgroundImage = 'none';
     }
+    generateQRButton.addEventListener('click', () => {
+        const rockData = JSON.stringify(currentRock);
+        qrcodeDiv.innerHTML = '';
+        new QRCode(qrcodeDiv, {
+            text: rockData,
+            width: 128,
+            height: 128
+        });
+    });
+    scanQRButton.addEventListener('click', () => {
+        qrInput.click();
+    });
+    qrInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                    if (code) {
+                        try {
+                            const rockData = JSON.parse(code.data);
+                            const newRock = new Rock(rockData.name, rockData.color, rockData.hasSunglasses, rockData.hasHat, rockData.skin);
+                            rocks.push(newRock);
+                            updateRockSelector();
+                            setCurrentRock(rocks.length - 1);
+                        } catch (error) {
+                            console.error('Invalid QR code data:', error);
+                        }
+                    } else {
+                        console.error('No QR code found in the image');
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
     createNewRock();
 });

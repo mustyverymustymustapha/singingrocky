@@ -171,3 +171,12 @@ body {
 #skin-selector {
     margin-right: 10px;
 }
+#share-rock {
+    margin-top: 20px;
+}
+#qrcode {
+    margin: 10px auto;
+}
+#qr-input {
+    display: none;
+}
